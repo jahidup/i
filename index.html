@@ -98,7 +98,7 @@
   </div>
 
   <script>
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFNBs03aceOzJ-Zmxqb1VPiI9OO1brCgfYrcNkUlBexZo_HYo50iK-uMBu0Xafhb1EuA/exec';  // <-- Replace
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFNBs03aceOzJ-Zmxqb1VPiI9OO1brCgfYrcNkUlBexZo_HYo50iK-uMBu0Xafhb1EuA/execv';  // <-- Replace with your deployed URL
     const translations = {
       en: {
         appTitle: '📘 Student Portal', logout: 'Logout', tests: 'Tests', results: 'Results',
@@ -126,7 +126,7 @@
     let studentInfo = null;
     let testsTaken = []; // for analysis dropdown
 
-    // i18n
+    // ---------- i18n ----------
     function setLanguage(lang) {
       currentLang = lang;
       document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -138,7 +138,7 @@
       });
     }
 
-    // UI Helpers
+    // ---------- UI Helpers ----------
     function showMessage(msg, isError = false) {
       const msgDiv = document.getElementById('message');
       msgDiv.classList.remove('hidden');
@@ -154,7 +154,7 @@
       if (btn) { btn.disabled = false; btn.innerHTML = originalText; }
     }
 
-    // Tab switching
+    // ---------- Tab switching ----------
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
@@ -167,11 +167,15 @@
       });
     });
 
-    // On load
+    // ---------- On load ----------
     window.onload = function() {
       setLanguage('en');
       if (!studentToken) {
-        window.location.href = 'index.html'; // redirect to login (if separate login page)
+        // If not logged in, redirect to login page (which might be same page with login form)
+        // Here we assume index.html includes both login and dashboard; if token missing, show login form.
+        // But in our structure we have no login form; we'll redirect to a separate login page.
+        // For simplicity, we'll just show an error and redirect.
+        window.location.href = 'login.html'; // Change to your actual login page
         return;
       }
       loadStudentInfo();
@@ -189,8 +193,10 @@
           document.getElementById('studentNameDisplay').innerText = studentInfo.name;
           document.getElementById('studentIdDisplay').innerText = `ID: ${studentInfo.id}`;
           document.getElementById('studentDobDisplay').innerText = `DOB: ${studentInfo.dob}`;
+        } else {
+          showMessage('Failed to load student info', true);
         }
-      } catch(e) { console.error(e); }
+      } catch(e) { console.error(e); showMessage('Error loading student info', true); }
     }
 
     async function loadAvailableTests() {
@@ -217,8 +223,10 @@
             });
           }
           container.innerHTML = html;
+        } else {
+          container.innerHTML = `<p class="text-red-500 text-center py-4">Error: ${data.data}</p>`;
         }
-      } catch(e) { console.error(e); }
+      } catch(e) { console.error(e); container.innerHTML = '<p class="text-red-500 text-center py-4">Network error</p>'; }
     }
 
     async function loadResults() {
@@ -254,8 +262,10 @@
             html += `</tbody></table>`;
           }
           container.innerHTML = html;
+        } else {
+          container.innerHTML = `<p class="text-red-500 text-center py-4">Error: ${data.data}</p>`;
         }
-      } catch(e) { console.error(e); }
+      } catch(e) { console.error(e); container.innerHTML = '<p class="text-red-500 text-center py-4">Network error</p>'; }
     }
 
     function loadAnalysisTests() {
@@ -267,7 +277,6 @@
     }
 
     async function openAnalysis(testId) {
-      // Fetch analysis data
       const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'getTestAnalysis', token: studentToken, testId }) });
       const data = await res.json();
       if (data.status !== 'success') return showMessage(data.data, true);
@@ -323,7 +332,7 @@
       localStorage.removeItem('studentToken');
       localStorage.removeItem('studentName');
       localStorage.removeItem('studentId');
-      window.location.href = 'index.html'; // to login page
+      window.location.href = 'login.html'; // Redirect to login page
     }
   </script>
 </body>
