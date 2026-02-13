@@ -24,7 +24,7 @@
     .qnav-circle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; background: white; color: #1e293b; }
     .qnav-circle.answered { background: #22c55e; color: white; border-color: #15803d; }
     .qnav-circle.not-answered { background: #f87171; color: white; border-color: #b91c1c; }
-    .qnav-circle.flagged { background: #a855f7; color: white; border-color: #7e22ce; }  /* Purple for flagged */
+    .qnav-circle.flagged { background: #a855f7; color: white; border-color: #7e22ce; }
     .qnav-circle.current { border: 3px solid #3b82f6; transform: scale(1.1); box-shadow: 0 0 0 3px rgba(59,130,246,0.3); }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; }
     .modal-content { background: white; padding: 2rem; border-radius: 2rem; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
@@ -113,7 +113,7 @@
   <script>
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFNBs03aceOzJ-Zmxqb1VPiI9OO1brCgfYrcNkUlBexZo_HYo50iK-uMBu0Xafhb1EuA/exec'; // <-- Replace
     const token = localStorage.getItem('studentToken');
-    if (!token) window.location.href = 'index.html';
+    if (!token) window.location.href = 'login.html';
 
     const urlParams = new URLSearchParams(window.location.search);
     const testId = urlParams.get('testId');
@@ -122,7 +122,7 @@
     let questions = [], currentIndex = 0, answers = {}, testInfo = null, timeLeft = 0, timerInterval;
     let currentLang = 'en';
     let visitedQuestions = new Set();
-    let flaggedQuestions = new Set(JSON.parse(localStorage.getItem(`flagged_${testId}`) || '[]')); // flagged question indices
+    let flaggedQuestions = new Set(JSON.parse(localStorage.getItem(`flagged_${testId}`) || '[]'));
 
     // ---------- Helper functions ----------
     function showLoadingOnButton(btnId) {
@@ -231,7 +231,6 @@
         document.getElementById('questionImage').querySelector('img').src = q.imageUrl;
       } else document.getElementById('questionImage').classList.add('hidden');
       
-      // Render options based on question type
       let html = '';
       if (q.questionType === 'NUMERICAL') {
         const saved = answers[q.qId]?.value || '';
@@ -254,7 +253,6 @@
       }
       document.getElementById('optionsContainer').innerHTML = html;
       
-      // Update flag button state
       const flagBtn = document.getElementById('flagBtn');
       const flagText = document.getElementById('flagBtnText');
       if (flaggedQuestions.has(index)) {
@@ -282,14 +280,18 @@
       answers[qId] = { type: 'mcq', selected: optId };
       localStorage.setItem(`answers_${testId}`, JSON.stringify(answers));
       renderQuestion(currentIndex);
-      await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'submitAnswer', token, testId, qId, selected: optId }) });
+      try {
+        await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'submitAnswer', token, testId, qId, selected: optId }) });
+      } catch(e) { console.error('Answer save error', e); }
     };
 
     window.saveNumericalAnswer = async function(qId, value) {
       answers[qId] = { type: 'numerical', value: value };
       localStorage.setItem(`answers_${testId}`, JSON.stringify(answers));
       updateNavigator();
-      await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'submitAnswer', token, testId, qId, answerValue: value }) });
+      try {
+        await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'submitAnswer', token, testId, qId, answerValue: value }) });
+      } catch(e) { console.error('Answer save error', e); }
     };
 
     function toggleFlag() {
