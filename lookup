@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberIntel · Pro · Trusted Intelligence</title>
+  <!-- Tailwind + Google Fonts + Font Awesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { font-family: 'Inter', 'Roboto Mono', monospace; }
+    body {
+      background: #0b0f12;
+      background-image: radial-gradient(circle at 15% 30%, rgba(0, 255, 157, 0.04) 0%, transparent 30%),
+                        radial-gradient(circle at 80% 70%, rgba(0, 180, 255, 0.04) 0%, transparent 35%);
+      color: #eef5ff;
+      overflow-x: hidden;
+    }
+    /* smooth glassmorphism */
+    .glass {
+      background: rgba(18, 28, 32, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 255, 157, 0.1);
+    }
+    .glass-card {
+      background: rgba(12, 22, 26, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 255, 157, 0.15);
+      transition: all 0.25s ease;
+    }
+    .glass-card:hover {
+      border-color: #00ff9d;
+      box-shadow: 0 12px 30px -8px rgba(0, 255, 157, 0.25);
+      transform: translateY(-3px);
+    }
+    /* glow text */
+    .glow {
+      text-shadow: 0 0 8px rgba(0, 255, 157, 0.6);
+    }
+    /* custom scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #142026; }
+    ::-webkit-scrollbar-thumb { background: #00ff9d; border-radius: 20px; }
+    /* typing cursor */
+    .typed-cursor {
+      display: inline-block;
+      width: 0.6rem;
+      height: 1.2rem;
+      background-color: #00ff9d;
+      margin-left: 4px;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    /* sidebar animation */
+    .sidebar-slide {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* trust badge pulse */
+    .pulse-dot {
+      box-shadow: 0 0 0 0 rgba(0, 255, 157, 0.6);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,255,157,0.6); } 70% { box-shadow: 0 0 0 10px rgba(0,255,157,0); } 100% { box-shadow: 0 0 0 0 rgba(0,255,157,0); } }
+  </style>
+</head>
+<body class="min-h-screen antialiased flex">
+
+  <!-- SIDEBAR (with close button + working contact) -->
+  <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-72 glass border-r border-[#00ff9d]/20 flex flex-col p-6 z-50 sidebar-slide -translate-x-full md:translate-x-0">
+    <!-- logo + close (mobile) -->
+    <div class="flex items-center justify-between mb-8">
+      <div class="text-2xl font-bold tracking-tighter glow text-[#00ff9d] flex items-center gap-1">
+        ◉ CYBER<span class="text-white">INTEL</span><span class="text-cyan-300 text-sm ml-1">/pro</span>
+      </div>
+      <button id="closeSidebarBtn" class="md:hidden text-gray-400 hover:text-[#00ff9d] text-3xl leading-none">&times;</button>
+    </div>
+
+    <!-- user / status -->
+    <div class="flex items-center gap-3 border border-[#00ff9d]/20 rounded-xl p-3 glass-card mb-6">
+      <div class="w-10 h-10 rounded-full bg-[#00ff9d]/20 flex items-center justify-center text-[#00ff9d]"><i class="fas fa-user-shield"></i></div>
+      <div>
+        <div class="text-sm font-medium">PRO AGENT</div>
+        <div class="text-xs text-gray-400 flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></span> verified · 24/7</div>
+      </div>
+    </div>
+
+    <!-- navigation -->
+    <nav class="flex-1 space-y-1">
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-300 hover:bg-[#00ff9d]/10 hover:text-[#00ff9d] transition-all"><i class="fas fa-tachometer-alt w-5"></i> Dashboard</a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg bg-[#00ff9d]/10 text-[#00ff9d] border-l-2 border-[#00ff9d]"><i class="fas fa-cube w-5"></i> Intelligence Modules</a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-300 hover:bg-[#00ff9d]/10 hover:text-[#00ff9d] transition-all"><i class="fas fa-history w-5"></i> Request Log</a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-300 hover:bg-[#00ff9d]/10 hover:text-[#00ff9d] transition-all"><i class="fas fa-shield-alt w-5"></i> Security</a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-300 hover:bg-[#00ff9d]/10 hover:text-[#00ff9d] transition-all"><i class="fas fa-cog w-5"></i> Settings</a>
+    </nav>
+
+    <!-- CONTACT CARD (FULLY WORKING) -->
+    <div class="mt-6 glass rounded-2xl p-5 border border-[#00ff9d]/30 bg-gradient-to-br from-[#00ff9d]/5 to-transparent">
+      <div class="flex items-center gap-2 text-[#00ff9d] text-sm font-mono mb-3">
+        <i class="fab fa-whatsapp text-xl"></i>
+        <span class="text-base font-semibold tracking-wide">+1 (218) 310-1130</span>
+      </div>
+      <p class="text-xs text-gray-400 mb-4">Direct PRO support · instant reply</p>
+      <a href="https://wa.me/12183101130?text=Hello%20PRO%20team%2C%20I%20need%20assistance%20with%20modules." target="_blank" class="flex items-center justify-center gap-2 w-full bg-[#00ff9d] hover:bg-[#00cc7d] text-black font-semibold py-3 rounded-xl transition-all shadow-lg shadow-[#00ff9d]/20">
+        <i class="fab fa-whatsapp"></i> Start WhatsApp chat
+      </a>
+      <div class="flex items-center gap-2 mt-3 text-[10px] text-gray-500">
+        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> typically replies in 2 min
+      </div>
+    </div>
+
+    <div class="text-[10px] text-gray-600 mt-4 border-t border-[#00ff9d]/10 pt-3">⚡ secure enclave v2.4 · encrypted</div>
+  </aside>
+
+  <!-- OVERLAY (click to close sidebar on mobile) -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 min-w-0 overflow-auto h-screen relative">
+
+    <!-- mobile top bar -->
+    <div class="md:hidden flex items-center justify-between sticky top-0 z-30 glass border-b border-[#00ff9d]/20 px-4 py-3">
+      <button id="menuToggle" class="text-[#00ff9d] text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
+      <div class="text-xl font-bold glow text-[#00ff9d]">◉ CPRO</div>
+      <a href="https://wa.me/12183101130?text=Hello%2C%20I'm%20interested%20in%20PRO%20services." target="_blank" class="text-[#00ff9d] border border-[#00ff9d]/40 hover:bg-[#00ff9d]/10 p-2 rounded-lg text-sm transition"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+
+      <!-- HERO SECTION (trust + new number) -->
+      <section class="mb-20 relative">
+        <div class="absolute -top-20 -right-20 w-80 h-80 bg-[#00ff9d]/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="inline-flex items-center gap-2 bg-[#00ff9d]/10 border border-[#00ff9d]/30 px-3 py-1 rounded-full text-xs text-[#00ff9d] mb-6"><i class="fas fa-shield-check"></i> TRUSTED BY 10,000+ PROFESSIONALS</div>
+          <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+            <span class="text-white">Accurate Digital<br></span>
+            <span class="text-[#00ff9d] glow">Intelligence & Verification</span>
+          </h1>
+          <div class="mt-6 text-lg md:text-xl text-gray-300 flex items-center">
+            <span class="mr-2 text-[#00ff9d]">❯</span>
+            <span id="typewriter" class="text-[#00ff9d] font-mono"></span>
+            <span class="typed-cursor"></span>
+          </div>
+          <p class="text-gray-400 max-w-2xl mt-4 text-sm md:text-base border-l-2 border-[#00ff9d] pl-4 bg-[#00ff9d]/5 py-3 rounded-r-md">
+            Real‑time data lookup • identity tools • automated workflows • PRO exclusive
+          </p>
+          <div class="flex flex-wrap gap-4 mt-8">
+            <a href="https://wa.me/12183101130?text=Hello%20PRO%20team%2C%20I%20need%20assistance%20with%20modules." target="_blank" class="inline-flex items-center gap-3 bg-[#00ff9d] text-black font-semibold px-8 py-4 rounded-xl hover:shadow-[0_0_30px_#00ff9d] transition-all duration-300 text-lg">
+              <i class="fab fa-whatsapp text-xl"></i> Chat with PRO
+            </a>
+            <button id="exploreModulesBtn" class="inline-flex items-center gap-2 border border-[#00ff9d]/50 text-[#00ff9d] px-8 py-4 rounded-xl hover:bg-[#00ff9d]/10 transition"><i class="fas fa-cubes"></i> Explore modules</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRUST STATS (impressive) -->
+      <section class="mb-20 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div class="glass-card rounded-2xl p-5 text-center border border-[#00ff9d]/20 hover:border-[#00ff9d]/40 transition">
+          <div class="text-3xl font-mono text-[#00ff9d]">10k+</div>
+          <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">requests</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 text-center border border-[#00ff9d]/20 hover:border-[#00ff9d]/40 transition">
+          <div class="text-3xl font-mono text-[#00ff9d]">99.9%</div>
+          <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">uptime</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 text-center border border-[#00ff9d]/20 hover:border-[#00ff9d]/40 transition">
+          <div class="text-3xl font-mono text-[#00ff9d]">22</div>
+          <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">modules</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5 text-center border border-[#00ff9d]/20 hover:border-[#00ff9d]/40 transition">
+          <div class="text-3xl font-mono text-[#00ff9d]">24/7</div>
+          <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">support</div>
+        </div>
+      </section>
+
+      <!-- SERVICES GRID (22 modules) -->
+      <section class="mb-24">
+        <div class="flex items-center gap-3 mb-8 border-b border-[#00ff9d]/20 pb-4">
+          <h2 class="text-2xl md:text-3xl font-semibold text-[#00ff9d]">◉ INTELLIGENCE MODULES</h2>
+          <span class="text-xs bg-[#00ff9d]/20 text-[#a7f0d0] px-3 py-1 rounded-full border border-[#00ff9d]/30">22 ACTIVE</span>
+        </div>
+        <div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 auto-rows-fr">
+          <!-- JS will inject cards here -->
+        </div>
+      </section>
+
+      <!-- FOOTER (updated number) -->
+      <footer class="border-t border-[#00ff9d]/20 pt-10 pb-6 text-sm text-gray-400 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>© 2025 CYBERINTEL PRO — <span class="text-[#00ff9d]">end-to-end encrypted</span></div>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-[#00ff9d] text-xl"><i class="fab fa-telegram"></i></a>
+          <a href="https://wa.me/12183101130" target="_blank" class="hover:text-[#00ff9d] text-xl"><i class="fab fa-whatsapp"></i></a>
+          <a href="#" class="hover:text-[#00ff9d] text-xl"><i class="fab fa-github"></i></a>
+          <a href="#" class="hover:text-[#00ff9d] text-xl"><i class="fas fa-envelope"></i></a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- MODAL (same structure, number updated) -->
+  <div id="serviceModal" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50 transition-all" style="background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);">
+    <div class="bg-[#0f1a1f] border border-[#00ff9d]/50 rounded-xl w-11/12 max-w-md p-6 shadow-2xl shadow-[#00ff9d]/20 relative glass-card">
+      <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-[#00ff9d] text-2xl">&times;</button>
+      <div class="mb-5">
+        <div class="flex items-center gap-3 border-b border-[#00ff9d]/30 pb-3">
+          <i class="fas fa-cube text-[#00ff9d] text-2xl"></i>
+          <h3 id="modalServiceName" class="text-xl font-bold text-[#00ff9d]">Service name</h3>
+        </div>
+        <p id="modalDescription" class="text-gray-300 my-4 text-sm leading-relaxed">description</p>
+        <div class="bg-black/40 p-4 rounded-md border border-[#00ff9d]/20 font-mono text-sm">
+          <div class="flex justify-between"><span class="text-gray-400">processing:</span><span id="modalProcessing" class="text-[#00ff9d]">Automated</span></div>
+          <div class="flex justify-between mt-2"><span class="text-gray-400">status:</span><span id="modalBadge" class="text-[#00ff9d] border border-[#00ff9d]/30 px-2 rounded">Instant</span></div>
+        </div>
+      </div>
+      <a id="modalWhatsAppBtn" href="https://wa.me/12183101130?text=Hello%2C%20I'm%20interested%20in%20PRO%20services." target="_blank" class="block w-full bg-[#00ff9d] hover:bg-[#00dd88] text-black font-semibold text-center py-3 rounded-md transition mt-2 flex items-center justify-center gap-2"><i class="fab fa-whatsapp"></i> Proceed via WhatsApp</a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- SERVICES DATASET (22 items) ----------
+      const services = [
+        { name: "SIM Owner Details", icon: "sim-card", description: "Instant SIM subscriber information.", badge: "Instant", proc: "Automated" },
+        { name: "Aadhaar to PAN", icon: "id-card", description: "Instant PAN card lookup from Aadhaar.", badge: "Instant", proc: "Automated" },
+        { name: "Ration Card to Aadhaar", icon: "utensils", description: "Retrieve Aadhaar from ration card details.", badge: "Instant", proc: "Automated" },
+        { name: "PAN to Masked Aadhaar", icon: "eye-slash", description: "Generate masked Aadhaar from PAN.", badge: "Instant", proc: "Automated" },
+        { name: "Vehicle to RC PDF", icon: "car", description: "Download RC PDF from vehicle number.", badge: "Instant", proc: "Automated" },
+        { name: "Voter Mobile Link", icon: "mobile-alt", description: "Link mobile number to voter ID.", badge: "Secure", proc: "Assisted" },
+        { name: "Voter PDF without OTP", icon: "file-pdf", description: "Get voter PDF instantly without OTP.", badge: "Instant", proc: "Automated" },
+        { name: "Ration Family Details", icon: "users", description: "Retrieve family details from ration card.", badge: "Automated", proc: "Automated" },
+        { name: "PM KISAN Land Seeding", icon: "tractor", description: "Check PM KISAN land seeding status.", badge: "Secure", proc: "Assisted" },
+        { name: "Mobile to Full Info", icon: "phone", description: "Get comprehensive details from mobile number.", badge: "Instant", proc: "Automated" },
+        { name: "UPI/QR to Bank Details", icon: "qrcode", description: "Extract bank details from UPI/QR.", badge: "Instant", proc: "Automated" },
+        { name: "PAN to Aadhaar (NSDL)", icon: "exchange-alt", description: "Find Aadhaar from PAN without OTP.", badge: "Instant", proc: "Automated" },
+        { name: "New PAN with Documents", icon: "file-alt", description: "Apply for new PAN with document upload.", badge: "Assisted", proc: "Assisted" },
+        { name: "New PAN without Documents", icon: "file", description: "Second PAN application without documents.", badge: "Assisted", proc: "Assisted" },
+        { name: "Mobile to Address", icon: "address-card", description: "Instant address lookup from mobile number.", badge: "Instant", proc: "Automated" },
+        { name: "OTT Subscriptions", icon: "tv", description: "Cheapest OTT platform subscriptions.", badge: "Automated", proc: "Automated" },
+        { name: "Bank Account on Your Number", icon: "money-check", description: "Assisted bank account setup.", badge: "Assisted", proc: "Assisted" },
+        { name: "Mobile to All Info", icon: "info-circle", description: "Complete details from mobile number.", badge: "Instant", proc: "Automated" },
+        { name: "All Services Available", icon: "cogs", description: "Comprehensive digital intelligence services.", badge: "24/7", proc: "Assisted" },
+        { name: "GST to PAN/Mobile", icon: "file-invoice", description: "Retrieve PAN and mobile from GST.", badge: "Instant", proc: "Automated" },
+        { name: "Fampay to Mobile", icon: "mobile", description: "Get mobile number from Fampay details.", badge: "Instant", proc: "Automated" },
+        { name: "Telegram to Mobile", icon: "paper-plane", description: "Find mobile number from Telegram username.", badge: "Instant", proc: "Automated" }
+      ];
+
+      // ---------- RENDER CARDS ----------
+      const grid = document.getElementById('services-grid');
+      function renderCards() {
+        grid.innerHTML = '';
+        services.forEach((s, index) => {
+          const card = document.createElement('div');
+          card.className = 'glass-card rounded-xl p-5 cursor-pointer transition-all hover:scale-[1.02] flex flex-col';
+          card.setAttribute('data-index', index);
+          card.innerHTML = `
+            <div class="flex items-start justify-between">
+              <i class="fas fa-${s.icon} text-3xl text-[#00ff9d]"></i>
+              <span class="text-xs font-mono border border-[#00ff9d]/40 px-2 py-0.5 rounded-full text-[#a0f0d0]">${s.badge}</span>
+            </div>
+            <h3 class="text-lg font-semibold mt-4 text-white">${s.name}</h3>
+            <p class="text-xs text-gray-400 mt-1 leading-relaxed flex-1">${s.description}</p>
+            <div class="mt-4 text-[#00ff9d] text-xs flex items-center gap-2">
+              <span class="w-2 h-2 bg-[#00ff9d] rounded-full animate-pulse"></span> ${s.proc} workflow
+            </div>
+          `;
+          card.addEventListener('click', () => openModal(index));
+          grid.appendChild(card);
+        });
+      }
+      renderCards();
+
+      // ---------- MODAL ----------
+      const modal = document.getElementById('serviceModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const modalName = document.getElementById('modalServiceName');
+      const modalDesc = document.getElementById('modalDescription');
+      const modalProc = document.getElementById('modalProcessing');
+      const modalBadge = document.getElementById('modalBadge');
+      const modalWhatsApp = document.getElementById('modalWhatsAppBtn');
+
+      function openModal(index) {
+        const s = services[index];
+        modalName.innerText = s.name;
+        modalDesc.innerText = s.description;
+        modalProc.innerText = s.proc;
+        modalBadge.innerText = s.badge;
+        modalWhatsApp.href = `https://wa.me/12183101130?text=Hello%2C%20I'm%20interested%20in%20${encodeURIComponent(s.name)}.%20Please%20guide%20me.`;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+      }
+
+      closeModalBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+
+      // ---------- TYPING ANIMATION ----------
+      const typeEl = document.getElementById('typewriter');
+      const phrases = ['Live intelligence feed', '22 modules online', 'Instant verification', 'PRO support 24/7'];
+      let phraseIndex = 0, charIndex = 0, isDeleting = false, currentText = '';
+      function typeEffect() {
+        const fullText = phrases[phraseIndex];
+        if (isDeleting) {
+          currentText = fullText.substring(0, charIndex - 1);
+          charIndex--;
+        } else {
+          currentText = fullText.substring(0, charIndex + 1);
+          charIndex++;
+        }
+        typeEl.innerText = currentText;
+        if (!isDeleting && charIndex === fullText.length) {
+          isDeleting = true;
+          setTimeout(typeEffect, 2000);
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(typeEffect, 300);
+        } else {
+          const speed = isDeleting ? 40 : 100;
+          setTimeout(typeEffect, speed);
+        }
+      }
+      setTimeout(typeEffect, 500);
+
+      // ---------- SIDEBAR TOGGLE (with close button and overlay) ----------
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const menuToggle = document.getElementById('menuToggle');
+      const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+      function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
+
+      if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+      if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+      overlay.addEventListener('click', closeSidebar);
+
+      // ensure sidebar hidden on mobile resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          sidebar.classList.remove('-translate-x-full', 'translate-x-0');
+          sidebar.classList.add('md:translate-x-0');
+          overlay.classList.add('hidden');
+          document.body.style.overflow = 'auto';
+        } else {
+          sidebar.classList.add('-translate-x-full');
+          sidebar.classList.remove('translate-x-0', 'md:translate-x-0');
+        }
+      });
+
+      // explore modules button scrolls to grid
+      document.getElementById('exploreModulesBtn')?.addEventListener('click', () => {
+        document.getElementById('services-grid').scrollIntoView({ behavior: 'smooth' });
+      });
+
+    })();
+  </script>
+  <noscript>JavaScript enabled for dynamic interface</noscript>
+</body>
+</html>
